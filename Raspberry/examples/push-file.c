@@ -10,8 +10,6 @@
 #include <string.h>
 #include <signal.h>
 
-#define DEFAULT_VCOM 2510
-
 static UBYTE *Frame_Buf = NULL;
 static IT8951_Dev_Info Dev_Info = {0, 0};
 
@@ -44,18 +42,26 @@ int main(int argc, char *argv[])
 {
     signal(SIGINT, Cleanup_Exit);
 
-    if (argc != 2) {
-        printf("Usage: sudo ./push-file <path-to-bmp>\r\n");
+    if (argc != 3) {
+        printf("Usage: sudo ./push-file <VCOM> <path-to-bmp>\r\n");
+        printf("Example: sudo ./push-file -2.51 ./pic/image.bmp\r\n");
         return 1;
     }
 
-    const char *path = argv[1];
+    double vcom_input;
+    if (sscanf(argv[1], "%lf", &vcom_input) != 1) {
+        printf("Invalid VCOM value: %s\r\n", argv[1]);
+        return 1;
+    }
+    UWORD VCOM = (UWORD)(fabs(vcom_input) * 1000);
+    const char *path = argv[2];
+
+    Debug("VCOM value: %d\r\n", VCOM);
 
     if (DEV_Module_Init() != 0) {
         return -1;
     }
 
-    UWORD VCOM = DEFAULT_VCOM;
     Dev_Info = EPD_IT8951_Init(VCOM);
 
     UWORD Panel_Width = Dev_Info.Panel_W;
