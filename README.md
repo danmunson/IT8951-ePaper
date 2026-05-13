@@ -1,3 +1,8 @@
+# Notes
+- setup instructions [here](https://www.waveshare.com/wiki/7.8inch_e-Paper_HAT#DIP_Switch) - use the bcm2835 libraries
+- run make in the tool directory to generate the "push-file" utility
+
+
 # IT8951-ePaper
 ## waveshare electronics
 ![waveshare_logo.png](waveshare_logo.png)

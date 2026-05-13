@@ -9,7 +9,11 @@ DIR_BIN      = ./bin
 OBJ_C = $(wildcard ${DIR_Config}/*.c ${DIR_EPD}/*.c ${DIR_FONTS}/*.c ${DIR_GUI}/*.c ${DIR_Examples}/*.c)
 OBJ_O = $(patsubst %.c,${DIR_BIN}/%.o,$(notdir ${OBJ_C}))
 
+# Separate the example binaries: epd uses main.c+example.c, push-file is its own entry point.
+OBJ_O := $(filter-out ${DIR_BIN}/push-file.o, ${OBJ_O})
+
 TARGET = epd
+PUSH_FILE_TARGET = push-file
 
 CC = gcc
 
@@ -36,7 +40,13 @@ endif
 
 $(shell mkdir -p $(DIR_BIN))
 
+# Object set for push-file: same support objects as epd, but swap main.o/example.o for push-file.o
+PUSH_FILE_OBJ_O := $(filter-out ${DIR_BIN}/main.o ${DIR_BIN}/example.o, ${OBJ_O}) ${DIR_BIN}/push-file.o
+
 ${TARGET}: ${OBJ_O}
+	$(CC) $(CFLAGS) $^ -o $@ $(LIB_USE)
+
+${PUSH_FILE_TARGET}: ${PUSH_FILE_OBJ_O}
 	$(CC) $(CFLAGS) $^ -o $@ $(LIB_USE)
 
 ${DIR_BIN}/%.o: ${DIR_Config}/%.c
@@ -61,4 +71,4 @@ ${DIR_BIN}/%.d: ${DIR_Config}/%.c
 -include $(patsubst %.c,${DIR_BIN}/%.d,$(notdir ${OBJ_C}))
 
 clean:
-	rm -rf $(DIR_BIN)/* $(TARGET)
+	rm -rf $(DIR_BIN)/* $(TARGET) $(PUSH_FILE_TARGET)
