@@ -112,7 +112,8 @@ int main(int argc, char *argv[])
     Frame_Buf = NULL;
 
     EPD_IT8951_Sleep();
-    DEV_Delay_ms(100);
+    //In case RPI is transmitting image in no hold mode, which requires at most 10s
+    DEV_Delay_ms(5000);
     DEV_Module_Exit();
     return 0;
 }
