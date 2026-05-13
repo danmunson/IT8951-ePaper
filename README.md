@@ -1,6 +1,14 @@
 # Notes
 - setup instructions [here](https://www.waveshare.com/wiki/7.8inch_e-Paper_HAT#DIP_Switch) - use the bcm2835 libraries
-- run make in the tool directory to generate the "push-file" utility
+- run the following in the `Raspberry` directory to generate the "push-file" utility
+
+```bash
+# build
+sudo make -j4 push-file
+
+# run with "sudo ./push-file {VCOM} {FILE_PATH}"
+sudo ./push-file -1.46 pic/1872x1404_0.bmp
+```
 
 
 # IT8951-ePaper
